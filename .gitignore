@@ -1,3 +1,10 @@
 .vscode/
 /data
 /bags
+/log
+/scripts/Figures
+/scripts/output_bags
+/scripts/exported_data
+** .asv
+/mermaid_diagrams
+**/__pycache__

@@ -97,15 +97,22 @@ private:
       rclcpp::Time odo_time(msg->header.stamp.sec, msg->header.stamp.nanosec, RCL_ROS_TIME);
       double time_diff = (odo_time - prev_time).seconds();
       em_->on_odo(msg->twist.twist.linear.x, msg->twist.twist.angular.z, time_diff);
+      // printf("EM - Odometry - timediff: %.2f\n", time_diff);
+      RCLCPP_INFO(this->get_logger(), "EM - Odometry - timediff: %.2f", time_diff);
     }
     prev_time = msg->header.stamp;
   }
 
   void action_callback(const topological_msgs::msg::TopologicalAction::SharedPtr msg)
   {
+
+    // Extract the ROS timestamp from the message
+    // double ros_timestamp = msg->header.stamp.sec + msg->header.stamp.nanosec * 1e-9;
+    double delta_time_s = 0.0;
+
     switch (msg->action) {
       case topological_msgs::msg::TopologicalAction::CREATE_NODE:
-        em_->on_create_experience(msg->dest_id);
+        em_->on_create_experience(msg->dest_id, msg->header.stamp.sec, msg->header.stamp.nanosec);
         em_->on_set_experience(msg->dest_id, 0);
         break;
       case topological_msgs::msg::TopologicalAction::CREATE_EDGE:
@@ -121,7 +128,7 @@ private:
 
     // Publicação da posição do robô
     geometry_msgs::msg::PoseStamped pose_output;
-    pose_output.header.stamp = this->get_clock()->now();
+    pose_output.header.stamp = msg->header.stamp;
     pose_output.pose.position.x = em_->get_experience(em_->get_current_id())->x_m;
     pose_output.pose.position.y = em_->get_experience(em_->get_current_id())->y_m;
     pose_output.pose.orientation.z = sin(em_->get_experience(em_->get_current_id())->th_rad / 2.0);
@@ -136,23 +143,30 @@ private:
       prev_pub_time = msg->header.stamp;
 
       topological_msgs::msg::TopologicalMap em_map;
-      em_map.header.stamp = this->get_clock()->now();
+      em_map.header.stamp = msg->header.stamp;
       em_map.node_count = em_->get_num_experiences();
       em_map.node.resize(em_->get_num_experiences());
 
       for (int i = 0; i < em_->get_num_experiences(); i++) {
         em_map.node[i].id = em_->get_experience(i)->id;
-        em_map.node[i].pose.position.x = em_->get_experience(i)->x_m;
-        em_map.node[i].pose.position.y = em_->get_experience(i)->y_m;
-        em_map.node[i].pose.orientation.z = sin(em_->get_experience(i)->th_rad / 2.0);
-        em_map.node[i].pose.orientation.w = cos(em_->get_experience(i)->th_rad / 2.0);
+        em_map.node[i].pose.pose.position.x = em_->get_experience(i)->x_m;
+        em_map.node[i].pose.pose.position.y = em_->get_experience(i)->y_m;
+        em_map.node[i].pose.pose.orientation.z = sin(em_->get_experience(i)->th_rad / 2.0);
+        em_map.node[i].pose.pose.orientation.w = cos(em_->get_experience(i)->th_rad / 2.0);
+        em_map.node[i].pose.header.stamp.sec = em_->get_experience(i)->seconds;
+        em_map.node[i].pose.header.stamp.nanosec = em_->get_experience(i)->nanoseconds;
       }
 
       em_map.edge_count = em_->get_num_links();
       em_map.edge.resize(em_->get_num_links());
       for (int i = 0; i < em_->get_num_links(); i++) {
+        delta_time_s = em_->get_link(i)->delta_time_s;
+        em_map.edge[i].id = i;
         em_map.edge[i].source_id = em_->get_link(i)->exp_from_id;
         em_map.edge[i].destination_id = em_->get_link(i)->exp_to_id;
+        em_map.edge[i].duration.sec = static_cast<int32_t>(delta_time_s);
+        em_map.edge[i].duration.nanosec = 
+        static_cast<uint32_t>((delta_time_s - static_cast<int32_t>(delta_time_s)) * 1e9);
         em_map.edge[i].transform.translation.x =
           em_->get_link(i)->d * cos(em_->get_link(i)->heading_rad);
         em_map.edge[i].transform.translation.y =
