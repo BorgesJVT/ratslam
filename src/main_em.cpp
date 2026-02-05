@@ -162,6 +162,7 @@ private:
       }
 
       pub_em_->publish(em_map);
+      RCLCPP_INFO(this->get_logger(), "Number of experiences: %d", em_->get_num_experiences());
     }
 
     // Publicação dos marcadores de visualização
