@@ -123,8 +123,12 @@ public:
     
     sub = this->create_subscription<sensor_msgs::msg::CompressedImage>(
       topic_root + "/camera/image/compressed", 10,
-      std::bind(&LocalViewNode::image_callback, this, std::placeholders::_1));
-    
+      [this](const sensor_msgs::msg::CompressedImage::SharedPtr msg) { this->image_callback(msg); });
+
+    sub_raw = this->create_subscription<sensor_msgs::msg::Image>(
+      topic_root + "/camera/image/image_raw", 10,
+      [this](const sensor_msgs::msg::Image::SharedPtr msg) { this->image_callback(msg); });
+
     RCLCPP_INFO(this->get_logger(), "LocalView node initialized");
     
 #ifdef HAVE_IRRLICHT
@@ -151,6 +155,7 @@ public:
   }
 
 private:
+
   void image_callback(const sensor_msgs::msg::CompressedImage::SharedPtr image)
   {
     RCLCPP_DEBUG(this->get_logger(), "LV:image_callback seq=%d", image->header.stamp.sec);
@@ -190,9 +195,49 @@ private:
 #endif
   }
 
+  void image_callback(const sensor_msgs::msg::Image::SharedPtr image)
+  {
+    RCLCPP_DEBUG(this->get_logger(), "LV:image_callback (raw) seq=%d", image->header.stamp.sec);
+
+    // Convert ROS Image to OpenCV Mat using cv_bridge
+    cv_bridge::CvImagePtr cv_ptr;
+    try
+    {
+      cv_ptr = cv_bridge::toCvCopy(image, sensor_msgs::image_encodings::BGR8);
+      if (cv_ptr->image.empty())
+      {
+        RCLCPP_ERROR(this->get_logger(), "Failed to convert image");
+        return;
+      }
+    }
+    catch (cv_bridge::Exception& e)
+    {
+      RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
+      return;
+    }
+
+    topological_msgs::msg::ViewTemplate vt_output;
+
+    lv->on_image(cv_ptr->image.data, false, cv_ptr->image.cols, cv_ptr->image.rows);
+
+    vt_output.header.stamp = this->now();
+    vt_output.current_id = lv->get_current_vt();
+    vt_output.relative_rad = lv->get_relative_rad();
+
+    pub_vt->publish(vt_output);
+
+#ifdef HAVE_IRRLICHT
+    if (use_graphics)
+    {
+      lvs->draw_all();
+    }
+#endif
+  }
+
   ratslam::LocalViewMatch* lv = nullptr;
   rclcpp::Publisher<topological_msgs::msg::ViewTemplate>::SharedPtr pub_vt;
   rclcpp::Subscription<sensor_msgs::msg::CompressedImage>::SharedPtr sub;
+  rclcpp::Subscription<sensor_msgs::msg::Image>::SharedPtr sub_raw;
 #ifdef HAVE_IRRLICHT
   ratslam::LocalViewScene *lvs = nullptr;
   bool use_graphics;
