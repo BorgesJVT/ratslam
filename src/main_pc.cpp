@@ -154,7 +154,7 @@ private:
       
       if (pc_output.action != ratslam::PosecellNetwork::NO_ACTION)
       {
-        pc_output.header.stamp = odo->header.stamp;
+        pc_output.header.stamp = odo->header.stamp; // Use the same timestamp as the odometry message to publish futher in the experience map
         pc_output.dest_id = pc->get_current_exp_id();
         pc_output.relative_rad = pc->get_relative_rad();
         pub_pc->publish(pc_output);

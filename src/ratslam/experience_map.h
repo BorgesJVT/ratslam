@@ -91,6 +91,8 @@ struct Experience
   double x_m, y_m, th_rad;
   int vt_id;
 
+  unsigned int  seconds;
+  unsigned int nanoseconds;
   std::vector<unsigned int> links_from; // links from this experience
   std::vector<unsigned int> links_to; // links to this experience
 
@@ -105,6 +107,8 @@ struct Experience
       ar & id;
       ar & x_m & y_m & th_rad;
       ar & vt_id;
+      ar & seconds;
+      ar & nanoseconds;
       ar & links_from & links_to;
       ar & time_from_current_s;
       ar & goal_to_current & current_to_goal;
@@ -124,7 +128,9 @@ public:
   ~ExperienceMap();
 
   // create a new experience for a given position
-  int on_create_experience(unsigned int exp_id);
+  int on_create_experience(unsigned int exp_id, unsigned int seconds, unsigned int nanoseconds);
+  
+  // Create a new link between experiences
   bool on_create_link(int exp_id_from, int exp_id_to, double rel_rad);
 
   Experience *get_experience(int id)

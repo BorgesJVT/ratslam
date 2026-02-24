@@ -181,7 +181,7 @@ private:
 
     lv->on_image(decoded_image.data, false, decoded_image.cols, decoded_image.rows);
 
-    vt_output.header.stamp = this->now();
+    vt_output.header.stamp = image->header.stamp; // Use the same timestamp as the image message to publish futher in the experience map
     vt_output.current_id = lv->get_current_vt();
     vt_output.relative_rad = lv->get_relative_rad();
 
@@ -220,7 +220,7 @@ private:
 
     lv->on_image(cv_ptr->image.data, false, cv_ptr->image.cols, cv_ptr->image.rows);
 
-    vt_output.header.stamp = this->now();
+    vt_output.header.stamp = image->header.stamp; // Use the same timestamp as the image message to publish futher in the experience map
     vt_output.current_id = lv->get_current_vt();
     vt_output.relative_rad = lv->get_relative_rad();
 
