@@ -8,7 +8,7 @@ ratslam_lv:
     template_y_size: 10
     vt_shift_match: 5
     vt_step_match: 1
-    vt_match_threshold: 0.085
+    vt_match_threshold: 0.00
     vt_normalisation: 0.4
     # draw
     enable: true
@@ -36,7 +36,7 @@ ratslam_em:
   ros__parameters:
     exp_correction: 0.5
     exp_loops: 10
-    exp_initial_em_deg: 5.0
+    exp_initial_em_deg: 0.0
     max_goals: 10
     # draw
     enable: true

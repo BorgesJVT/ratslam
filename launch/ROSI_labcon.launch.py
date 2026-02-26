@@ -75,6 +75,7 @@ def generate_launch_description():
         executable='ratslam_vo',
         name='ratslam_vo',
         output='screen',
+        arguments=['--ros-args', '--log-level', 'ratslam_vo:=DEBUG'],
         parameters=[
             config_file,
             {

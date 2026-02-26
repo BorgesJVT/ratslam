@@ -84,7 +84,7 @@ public:
     double vtrans_max = this->get_parameter("vtrans_max").as_double();
 
     // Log all parameters for debugging
-    RCLCPP_INFO(this->get_logger(), "LocalView Parameters:");
+    RCLCPP_INFO(this->get_logger(), "VisualOdometry Parameters:");
     RCLCPP_INFO(this->get_logger(), "  topic_root: %s", topic_root.c_str());
     RCLCPP_INFO(this->get_logger(), "  vtrans_image_x_min: %d", vtrans_image_x_min);
     RCLCPP_INFO(this->get_logger(), "  vtrans_image_x_max: %d", vtrans_image_x_max);
