@@ -5,10 +5,10 @@ close all;
 clc;
 
 % Set to true to save a experience map evolution video
-save_video = false;
+save_video = true;
 
 % Set to true to save partial figures of map evolution
-save_figures = false;
+save_figures = true;
 
 if save_video
     numFrames = 50; % Número de iterações/timesteps
@@ -71,10 +71,10 @@ while i <= n
             scatter(x(end),y(end),'blue','diamond','filled','SizeData',sz)
             scatter(nodes_x(end),nodes_y(end),'red','diamond','filled','SizeData',sz)
             hold off
-            title('Experience Map','FontSize',14,'Interpreter','latex')
-            xlabel('$x$ (m)','FontSize',14,'Interpreter','latex');
-            ylabel('$y$ (m)','FontSize',14,'Interpreter','latex');
-            legend('ground truth','trajectory','Interpreter','latex','Location','best')            
+            title('Experience Map','FontSize',20,'Interpreter','latex')
+            xlabel('$x$ (m)','FontSize',20,'Interpreter','latex');
+            ylabel('$y$ (m)','FontSize',20,'Interpreter','latex');
+            legend('ground truth','trajectory','Interpreter','latex','FontSize',20,'Location','best')            
             grid on
             hold off
             drawnow
@@ -120,10 +120,10 @@ scatter(x(1),y(1),'blue','filled','Marker','o','SizeData',sz*1.25)
 scatter(x(end),y(end),'blue','diamond','filled','SizeData',sz*1.25)
 scatter(nodes_x(end),nodes_y(end),'red','diamond','filled','SizeData',sz*1.25)
 hold off
-title('Experience Map - offset correction','FontSize',14,'Interpreter','latex')
-xlabel('$x$ (m)','FontSize',14,'Interpreter','latex');
-ylabel('$y$ (m)','FontSize',14,'Interpreter','latex');
-legend('ground truth','trajectory','Interpreter','latex','Location','best')            
+title('Experience Map - offset correction','FontSize',20,'Interpreter','latex')
+xlabel('$x$ (m)','FontSize',20,'Interpreter','latex');
+ylabel('$y$ (m)','FontSize',20,'Interpreter','latex');
+legend('ground truth','trajectory','Interpreter','latex','FontSize',20,'Location','best')            
 grid on
 hold off
 drawnow
@@ -212,10 +212,10 @@ text(max_idx, max_erro_dist, lbl, 'VerticalAlignment', 'bottom', ...
      'HorizontalAlignment', 'left', 'FontSize', 10, 'BackgroundColor','y','Margin',2);
 stem(max_idx,max_erro_dist,'LineWidth',1.5,'Color','k')
 hold off
-title(['Trajectory error - Average = ' num2str(erro_med) ' m'],'FontSize',12,'Interpreter','latex')
-xlabel('$k$ (samples)','FontSize',14,'Interpreter','latex');
-ylabel('Euclidian distance','FontSize',14,'Interpreter','latex');
-legend('Euclidian distance','Average error','Maximum error','Interpreter','latex','Location','best') 
+title(['Trajectory error - Average = ' num2str(erro_med) ' m'],'FontSize',20,'Interpreter','latex')
+xlabel('$k$ (samples)','FontSize',20,'Interpreter','latex');
+ylabel('Euclidian distance','FontSize',20,'Interpreter','latex');
+legend('Euclidian distance','Average error','Maximum error','Interpreter','latex','FontSize',20,'Location','best') 
 
 print('-dpng', '-r600', 'Figures/Exp_Map/Distance_error.png');
 print('-depsc2', '-r600', 'Figures/Exp_Map/Distance_error.eps');
@@ -234,10 +234,10 @@ scatter(em_x(end),em_y(end),'red','diamond','filled','SizeData',sz*1.25)
 scatter(em_x(max_idx),em_y(max_idx),'black','diamond','filled','SizeData',sz*1.25)
 scatter(new_x(max_idx),new_y(max_idx),'black','diamond','filled','SizeData',sz*1.25)
 title(['Experience Map - Maximum error = ' num2str(max_erro_dist) ' m'], ...
-    'FontSize',14,'Interpreter','latex')
-xlabel('$x$ (m)','FontSize',14,'Interpreter','latex');
-ylabel('$y$ (m)','FontSize',14,'Interpreter','latex');
-legend('ground truth','trajectory','maximum error','Interpreter','latex','Location','best')            
+    'FontSize',20,'Interpreter','latex')
+xlabel('$x$ (m)','FontSize',20,'Interpreter','latex');
+ylabel('$y$ (m)','FontSize',20,'Interpreter','latex');
+legend('ground truth','trajectory','maximum error','Interpreter','latex','FontSize',20,'Location','best')            
 grid on
 
 print('-dpng', '-r600', 'Figures/Exp_Map/Maximum_error.png');
