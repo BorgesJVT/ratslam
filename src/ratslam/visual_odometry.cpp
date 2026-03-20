@@ -101,7 +101,7 @@ void VisualOdometry::visual_odo(double *data, unsigned short width, double *oldd
   int offset;
 
   int cwl = width;
-  int slen = 360;
+  int slen = 40;
 
   int k;
   //  data, olddata are 1D arrays of the intensity profiles  (current and previous);

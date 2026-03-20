@@ -6,6 +6,9 @@ from launch_ros.substitutions import FindPackageShare
 import os
 from ament_index_python.packages import get_package_share_directory
 
+# ros2 bag play irat_aus_28112011/irat_aus_28112011.db3 --rate 1.0 --clock --start-paused 
+# --topics /irat_red/odom /irat_red/camera/image/compressed
+
 def generate_launch_description():
     # Get package directory
     pkg_dir = get_package_share_directory('ratslam')

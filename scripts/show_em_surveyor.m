@@ -5,10 +5,10 @@ close all;
 clc;
 
 % Set to true to save a experience map evolution video
-save_video = false;
+save_video = true;
 
 % Set to true to save partial figures of map evolution
-save_figures = false;
+save_figures = true;
 
 if save_video
     numFrames = 50; % Número de iterações/timesteps
@@ -24,7 +24,7 @@ nodes = readtable('exported_data/nodes.csv');
 links = readtable('exported_data/links.csv');
 
 % Load Ground Truth
-GT_table = readtable('exported_data/gps.csv');
+GT_table = readtable('exported_data/gps_pier.csv');
 
 % extract lat and long
 n2 = height(GT_table);
@@ -74,6 +74,7 @@ while i <= n
         end
             [x, y] = ground_truth_cutting(node_time_stamp, GT_table);
             plot(x,y,'LineWidth',1.5,'Color','b','LineStyle','-')
+            set(gcf,'Position',[546 503 883  734]);
             xlim(x_lim); ylim(y_lim);
             sz = 75; % Scatter marke size
             hold on
@@ -222,15 +223,16 @@ xlim([0 new_len-1])
 grid on
 % Show coordinates next to point
 lbl = sprintf('x = %i\ny = %0.2f', max_idx, max_erro_dist);
-text(max_idx-50, max_erro_dist+.5, lbl, 'VerticalAlignment', 'bottom', ...
+text(max_idx-30, max_erro_dist+1, lbl, 'VerticalAlignment', 'bottom', ...
      'HorizontalAlignment', 'left', 'FontSize', 10, 'BackgroundColor','y','Margin',2);
 stem(max_idx,max_erro_dist,'LineWidth',1.5,'Color','k')
 hold off
-title(['Trajectory error - Average = ' num2str(erro_med) ' m'],'FontSize',12,'Interpreter','latex')
-xlabel('$k$ (samples)','FontSize',14,'Interpreter','latex');
-ylabel('Euclidian distance','FontSize',14,'Interpreter','latex');
-legend('Euclidian distance','Average error','Maximum error','Interpreter','latex','Location','best') 
+title(['Average Trajectory Error = ' num2str(erro_med) ' m'],'FontSize',16,'Interpreter','latex')
+xlabel('$t$ (samples)','FontSize',16,'Interpreter','latex');
+ylabel('Euclidian Distance','FontSize',16,'Interpreter','latex');
+legend('Euclidian Distance','Average error','Maximum error','Interpreter','latex','Location','best','FontSize',14) 
 
+savefig('Figures/Exp_Map/Distance_error.fig')
 print('-dpng', '-r600', 'Figures/Exp_Map/Distance_error.png');
 print('-depsc2', '-r600', 'Figures/Exp_Map/Distance_error.eps');
 
@@ -247,12 +249,13 @@ scatter(em_x(end),em_y(end),'red','diamond','filled','SizeData',sz)
 scatter(em_x(max_idx),em_y(max_idx),'black','diamond','filled','SizeData',sz)
 scatter(x(max_idx),y(max_idx),'black','diamond','filled','SizeData',sz)
 title(['Experience Map - Maximum error = ' num2str(max_erro_dist) ' m'], ...
-    'FontSize',14,'Interpreter','latex')
-xlabel('$x$ (m)','FontSize',14,'Interpreter','latex');
-ylabel('$y$ (m)','FontSize',14,'Interpreter','latex');
-legend('ground truth','trajectory','maximum error','Interpreter','latex','Location','best')            
+    'FontSize',16,'Interpreter','latex')
+xlabel('$x$ (m)','FontSize',16,'Interpreter','latex');
+ylabel('$y$ (m)','FontSize',16,'Interpreter','latex');
+legend('ground truth','trajectory','maximum error','Interpreter','latex','Location','best','FontSize',14)            
 grid on
 
+savefig('Figures/Exp_Map/Maximum_error.fig')
 print('-dpng', '-r600', 'Figures/Exp_Map/Maximum_error.png');
 print('-depsc2', '-r600', 'Figures/Exp_Map/Maximum_error.eps');
 

@@ -8,7 +8,7 @@ clc;
 save_video = false;
 
 % Set to true to save partial figures of map evolution
-save_figures = false;
+save_figures = true;
 
 if save_video
     numFrames = 50; % Número de iterações/timesteps
@@ -54,6 +54,7 @@ while i <= n
         end
             % [x, y] = ground_truth_cutting(node_time_stamp, GT_table);
             plot(nodes_x,nodes_y,'LineWidth',1.5,'Color','r','LineStyle','-')
+            set(gcf,'Position',[546 503 883  734]);
             xlim(x_lim); ylim(y_lim);
             sz = 75; % Scatter marke size
             hold on
@@ -115,7 +116,7 @@ plot(nodes_x,nodes_y,'LineWidth',1.5,'Color','r','LineStyle','-')
             % scatter(x(end),y(end),'blue','diamond','filled','SizeData',sz)
             scatter(nodes_x(end),nodes_y(end),'red','diamond','filled','SizeData',sz)
 hold off
-title('Experience Map - offset correction','FontSize',20,'Interpreter','latex')
+title('Experience Map','FontSize',20,'Interpreter','latex')
 xlabel('$x$ (m)','FontSize',20,'Interpreter','latex');
 ylabel('$y$ (m)','FontSize',20,'Interpreter','latex');
 % legend('trajectory - RatSLAM','Interpreter','latex','Location','best')           
@@ -131,6 +132,7 @@ if save_figures
     print('-dpng', '-r600', figure_name+'.png');
     print('-depsc2', '-r600', figure_name+'.eps');
     fig_counter = fig_counter+1;
+    savefig('Figures/Exp_Map/Final_Exp_map.fig')
     print('-dpng', '-r600', 'Figures/Exp_Map/Final_Exp_map.png');
     print('-depsc2', '-r600', 'Figures/Exp_Map/Final_Exp_map.eps');
 end

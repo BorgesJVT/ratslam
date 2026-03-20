@@ -5,10 +5,10 @@ close all;
 clc;
 
 % Set to true to save a experience map evolution video
-save_video = true;
+save_video = false;
 
 % Set to true to save partial figures of map evolution
-save_figures = true;
+save_figures = false;
 
 if save_video
     numFrames = 50; % Número de iterações/timesteps
@@ -55,13 +55,14 @@ while i <= n
             nodes_y = [nodes_y; nodes.y(i)];
             disp(nodes.id(i))
             i = i + 1;
-            node_time_stamp = nodes.stamp_sec(i-1) % Time stemp of last map publish
+            node_time_stamp = nodes.stamp_sec(i-1); % Time stemp of last map publish
             if (i > n)
                 break
             end
         end
             [x, y] = ground_truth_cutting(node_time_stamp, GT_table);
             plot(x,y,'LineWidth',1.5,'Color','b','LineStyle','-')
+            set(gcf,'Position',[546 503 883  734]);
             xlim(x_lim); ylim(y_lim);
             sz = 75; % Scatter marke size
             hold on
@@ -111,6 +112,7 @@ x = x - off_setx;
 y = y - off_sety;
 
 plot(x,y,'LineWidth',1.5,'Color','b','LineStyle','-')
+set(gcf,'Position',[546 503 883  734]);
 % xlim(x_lim); ylim(y_lim);
 sz = 75; % Scatter marke size
 hold on
@@ -204,11 +206,12 @@ figure'
 plot(k,erro_dist,'LineWidth',1.5,'Color','b','LineStyle','-')
 hold on
 plot(k,erro_med*ones(new_len,1),'LineWidth',1.5,'Color','r','LineStyle','--')
-xlim([0 new_len-1])
+xlim([0 new_len-1]);
+ylim([0 0.7]);
 grid on
 % Show coordinates next to point
 lbl = sprintf('x = %i\ny = %0.2f', max_idx, max_erro_dist);
-text(max_idx, max_erro_dist, lbl, 'VerticalAlignment', 'bottom', ...
+text(max_idx+60, max_erro_dist-0.025, lbl, 'VerticalAlignment', 'bottom', ...
      'HorizontalAlignment', 'left', 'FontSize', 10, 'BackgroundColor','y','Margin',2);
 stem(max_idx,max_erro_dist,'LineWidth',1.5,'Color','k')
 hold off
@@ -217,6 +220,7 @@ xlabel('$k$ (samples)','FontSize',20,'Interpreter','latex');
 ylabel('Euclidian distance','FontSize',20,'Interpreter','latex');
 legend('Euclidian distance','Average error','Maximum error','Interpreter','latex','FontSize',20,'Location','best') 
 
+savefig('Figures/Exp_Map/Distance_error.fig');
 print('-dpng', '-r600', 'Figures/Exp_Map/Distance_error.png');
 print('-depsc2', '-r600', 'Figures/Exp_Map/Distance_error.eps');
 
@@ -240,6 +244,7 @@ ylabel('$y$ (m)','FontSize',20,'Interpreter','latex');
 legend('ground truth','trajectory','maximum error','Interpreter','latex','FontSize',20,'Location','best')            
 grid on
 
+savefig('Figures/Exp_Map/Maximum_error.fig');
 print('-dpng', '-r600', 'Figures/Exp_Map/Maximum_error.png');
 print('-depsc2', '-r600', 'Figures/Exp_Map/Maximum_error.eps');
 

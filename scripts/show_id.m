@@ -43,16 +43,20 @@ dest_id = em_id_table.dest_id;
 %
 
 plot(t1, vt_id, 'rx',"LineWidth",1.1);
+set(gcf,'Position',[546 503 883  734]);
 grid on
 hold on;
 plot(t2, dest_id, 'bo','LineWidth',1.1);
 hold off;
+% ylim([0 5000])
 % 
 xlabel('$t$ (s)','FontSize',20,'Interpreter','latex');
 ylabel('Template / Experience ID Number', 'FontSize',20,'Interpreter','latex');
 % 
 % axis tight;
-legend('Template ID', 'Experience ID', 'Location', 'NorthWest','Interpreter','latex','Fontsize',20);
-% 
+title('View cells and Experiences','FontSize',20,'Interpreter','latex')
+legend('Template ID', 'Experience ID', 'Location', 'NorthWest','Interpreter','latex','Fontsize',16);
+%
+savefig('Figures/vt_ex_ids.fig')
 print -r300 -djpeg100 Figures/vt_ex_ids.png
 print('-depsc2', '-r600', 'Figures/vt_ex_ids.eps');
