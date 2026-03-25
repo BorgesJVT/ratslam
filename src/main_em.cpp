@@ -233,12 +233,12 @@ private:
       for (int i = 0; i < em->get_num_experiences(); i++)
       {
         em_map.node[i].id = em->get_experience(i)->id;
-        em_map.node[i].pose.position.x = em->get_experience(i)->x_m;
-        em_map.node[i].pose.position.y = em->get_experience(i)->y_m;
+        em_map.node[i].pose.pose.position.x = em->get_experience(i)->x_m;
+        em_map.node[i].pose.pose.position.y = em->get_experience(i)->y_m;
         
         tf2::Quaternion q;
         q.setRPY(0, 0, em->get_experience(i)->th_rad);
-        em_map.node[i].pose.orientation = tf2::toMsg(q);
+        em_map.node[i].pose.pose.orientation = tf2::toMsg(q);
       }
 
       em_map.edge_count = em->get_num_links();
